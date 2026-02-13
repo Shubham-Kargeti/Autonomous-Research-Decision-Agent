@@ -6,10 +6,11 @@ def run_agent(goal: str) -> AgentResponse:
     print(f"[AGENT] Goal received: {goal}")
 
     plan = create_plan(goal)
-    result = execute_plan(plan)
+
+    execution_results = execute_plan(plan)
 
     return AgentResponse(
         goal=goal,
         plan=plan,
-        result=result
+        result=execution_results
     )
