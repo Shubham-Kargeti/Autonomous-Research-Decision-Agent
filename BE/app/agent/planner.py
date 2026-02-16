@@ -12,8 +12,22 @@ Available tools:
 - web_search (requires: query)
 - none (for reasoning-only steps)
 
-If a step requires external information, assign tool="web_search"
-and include tool_input with required fields.
+IMPORTANT:
+If the goal involves:
+- Real-world positions
+- Institutions
+- Organizations
+- Religious seats
+- Government roles
+- Locations
+- Current procedures
+- Eligibility criteria
+- Legal or formal processes
+
+Then you MUST use tool="web_search"
+to verify accurate and up-to-date information.
+
+Only skip web_search if the step is purely reasoning-based.
 
 Schema:
 {
@@ -28,6 +42,7 @@ Schema:
   ]
 }
 """
+
 
 
 # ==========================================================

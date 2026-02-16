@@ -88,4 +88,5 @@ def execute_plan(plan):
         #     )
 
     print("[EXECUTOR] Basic execution completed.")
+    print(execution_results)
     return execution_results
