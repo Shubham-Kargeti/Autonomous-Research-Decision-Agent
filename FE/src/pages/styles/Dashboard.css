@@ -106,3 +106,30 @@
   font-weight: 500;
   margin-top: 6px;
 }
+
+.empty-state {
+  margin-top: 30px;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.08),
+    rgba(147, 51, 234, 0.05)
+  );
+
+  border: 1px solid rgba(124, 58, 237, 0.15);
+
+  font-size: 16px;
+  font-weight: 500;
+  color: #4c1d95;
+
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+}
+
+.empty-state:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.15);
+}

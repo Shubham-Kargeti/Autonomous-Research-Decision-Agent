@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import "../pages/styles/Dashboard.css";
+import LoadingOverlay from "../components/LoadingOverlay";
+import ErrorModal from "../components/ErrorModal";
 
 interface AgentRun {
   id: string;
@@ -22,6 +24,9 @@ function Dashboard({ activeTab }: Props) {
   const [history, setHistory] = useState<AgentRun[]>([]);
   const [loading, setLoading] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // ==============================
   // Run Agent
@@ -35,7 +40,7 @@ function Dashboard({ activeTab }: Props) {
     try {
       const token = await getAccessTokenSilently();
 
-      const response = await fetch("http://localhost:8000/agent/run", {
+      const response = await fetch(`${API_BASE_URL}/agent/run`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,16 +50,28 @@ function Dashboard({ activeTab }: Props) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to run agent");
+        throw new Error("Backend Error");
       }
 
       const data = await response.json();
       setOutput(data.result);
-
       setGoal("");
       fetchHistory();
     } catch (err) {
       console.error(err);
+
+      const jokes = [
+        "Our AI spilled coffee on its neural network ☕🤖",
+        "The AI is recalibrating its brain cells 🧠⚡",
+        "The robots are on a tea break 🍵",
+        "The AI tried to Google itself and panicked 😅",
+        "Neural network temporarily disconnected from reality 🔌",
+      ];
+
+      const randomJoke =
+        jokes[Math.floor(Math.random() * jokes.length)];
+
+      setError(randomJoke);
     }
 
     setLoading(false);
@@ -69,7 +86,7 @@ function Dashboard({ activeTab }: Props) {
     try {
       const token = await getAccessTokenSilently();
 
-      const response = await fetch("http://localhost:8000/agent/history", {
+      const response = await fetch(`${API_BASE_URL}/agent/history`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -93,104 +110,117 @@ function Dashboard({ activeTab }: Props) {
   }, []);
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h2>Welcome, {user?.name}</h2>
-        <p className="subtitle">
-          {activeTab === "agent"
-            ? "Run your autonomous AI agent"
-            : "Your previous executions"}
-        </p>
-      </div>
+    <>
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <h2>Welcome, {user?.name}</h2>
+          <p className="subtitle">
+            {activeTab === "agent"
+              ? "Run your autonomous AI agent"
+              : "Your previous executions"}
+          </p>
+        </div>
 
-      {/* ============================= */}
-      {/* AGENT SECTION */}
-      {/* ============================= */}
-      {activeTab === "agent" && (
-        <div className="agent-section">
-          <div className="agent-card">
-            <textarea
-              placeholder="Enter your research goal (e.g., Study plan for MTech, Market research on EV batteries...)"
-              value={goal}
-              onChange={(e) => setGoal(e.target.value)}
-            />
+        {/* ============================= */}
+        {/* AGENT SECTION */}
+        {/* ============================= */}
+        {activeTab === "agent" && (
+          <div className="agent-section">
+            <div className="agent-card">
+              <textarea
+                placeholder="Enter your research goal (e.g., Study plan for MTech, Market research on EV batteries...)"
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+              />
 
-            <button onClick={runAgent} disabled={loading}>
-              {loading ? "Running Agent..." : "Run Agent"}
-            </button>
+              <button onClick={runAgent} disabled={loading}>
+                {loading ? "Running Agent..." : "Run Agent"}
+              </button>
+            </div>
+
+            <div className="output-section">
+              {!loading && output.length === 0 && (
+                <div className="empty-state">
+                  No results yet. Run the agent to see output.
+                </div>
+              )}
+
+              {!loading &&
+                output.map((step, index) => (
+                  <div key={index} className="output-card">
+                    <div className="step-header">
+                      <span className="step-number">
+                        Step {step.step_id}
+                      </span>
+                      <span className={`status ${step.status}`}>
+                        {step.status}
+                      </span>
+                    </div>
+
+                    <p className="step-action">{step.action}</p>
+
+                    {step.tool_used && (
+                      <div className="tool-info">
+                        🔧 Tool Used: {step.tool_used}
+                      </div>
+                    )}
+                  </div>
+                ))}
+            </div>
           </div>
+        )}
 
-          {/* OUTPUT */}
-          <div className="output-section">
-            {loading && <p className="loading-text">Agent is thinking...</p>}
+        {/* ============================= */}
+        {/* HISTORY SECTION */}
+        {/* ============================= */}
+        {activeTab === "history" && (
+          <div className="history-section">
+            {historyLoading && (
+              <p className="loading-text">Loading history...</p>
+            )}
 
-            {!loading && output.length === 0 && (
+            {!historyLoading && history.length === 0 && (
               <div className="empty-state">
-                No results yet. Run the agent to see output.
+                No history available yet.
               </div>
             )}
 
-            {output.map((step, index) => (
-              <div key={index} className="output-card">
-                <div className="step-header">
-                  <span className="step-number">
-                    Step {step.step_id}
-                  </span>
-                  <span
-                    className={`status ${step.status}`}
-                  >
-                    {step.status}
-                  </span>
-                </div>
-
-                <p className="step-action">{step.action}</p>
-
-                {step.tool_used && (
-                  <div className="tool-info">
-                    🔧 Tool Used: {step.tool_used}
+            {!historyLoading &&
+              history.map((item) => (
+                <div key={item.id} className="history-card">
+                  <div className="history-header">
+                    <h4>{item.goal}</h4>
+                    <span>
+                      {new Date(item.created_at).toLocaleString()}
+                    </span>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  <div className="history-meta">
+                    {item.result?.length || 0} steps executed
+                  </div>
+                </div>
+              ))}
           </div>
-        </div>
+        )}
+      </div>
+
+      {/* FULL SCREEN LOADING OVERLAY */}
+      {loading && (
+        <LoadingOverlay message="Agent is thinking..." />
       )}
 
-      {/* ============================= */}
-      {/* HISTORY SECTION */}
-      {/* ============================= */}
-      {activeTab === "history" && (
-        <div className="history-section">
-          {historyLoading && (
-            <p className="loading-text">Loading history...</p>
-          )}
-
-          {!historyLoading && history.length === 0 && (
-            <div className="empty-state">
-              No history available yet.
-            </div>
-          )}
-
-          {!historyLoading &&
-            history.map((item) => (
-              <div key={item.id} className="history-card">
-                <div className="history-header">
-                  <h4>{item.goal}</h4>
-                  <span>
-                    {new Date(
-                      item.created_at
-                    ).toLocaleString()}
-                  </span>
-                </div>
-
-                <div className="history-meta">
-                  {item.result?.length || 0} steps executed
-                </div>
-              </div>
-            ))}
-        </div>
+      {/* ERROR MODAL */}
+      {error && (
+        <ErrorModal
+          message={error}
+          onRetry={() => {
+            setError(null);
+            runAgent();
+          }}
+          onClose={() => setError(null)}
+        />
       )}
-    </div>
+    </>
   );
 }
 

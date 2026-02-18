@@ -5,43 +5,48 @@
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
+  justify-content: flex-start;   /* changed */
+  padding: 24px 20px;
 }
 
 .sidebar-logo {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 40px;  /* push menu slightly down */
 }
 
 .sidebar-logo span {
   font-size: 22px;
+  font-weight: 600;
 }
 
 .sidebar-menu {
-  margin-top: 40px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 14px;
+  margin-top: 10px;   /* smaller spacing */
 }
 
 .sidebar-item {
   padding: 12px 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .sidebar-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-item.active {
   background: linear-gradient(90deg, #7c3aed, #9333ea);
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
 }
 
 .sidebar-footer {
+  margin-top: auto;   /* pushes footer to bottom */
   font-size: 12px;
   opacity: 0.6;
+  padding-top: 20px;
 }
