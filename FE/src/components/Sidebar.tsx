@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "../components/styles/Sidebar.css";
 
 interface SidebarProps {
