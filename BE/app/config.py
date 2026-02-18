@@ -29,12 +29,11 @@ class Settings:
     DB_NAME: str = os.getenv("DB_NAME")
 
     # ===============================
-    # SECURITY CONFIG
+    # AUTH0 CONFIG (NEW)
     # ===============================
-    SECRET_KEY: str = os.getenv("SECRET_KEY")
-    ACCESS_TOKEN_EXPIRE_HOURS: int = int(
-        os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", 24)
-    )
+    AUTH0_DOMAIN: str = os.getenv("AUTH0_DOMAIN")
+    AUTH0_AUDIENCE: str = os.getenv("AUTH0_AUDIENCE")
+    AUTH0_ISSUER: str = os.getenv("AUTH0_ISSUER")
 
     @property
     def DATABASE_URL(self) -> str:
@@ -44,6 +43,13 @@ class Settings:
             f"{encoded_password}@{self.DB_HOST}:"
             f"{self.DB_PORT}/{self.DB_NAME}"
         )
+
+    @property
+    def AUTH0_JWKS_URL(self) -> str:
+        """
+        URL used to fetch public signing keys for verifying RS256 tokens.
+        """
+        return f"https://{self.AUTH0_DOMAIN}/.well-known/jwks.json"
 
 
 settings = Settings()

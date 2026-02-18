@@ -1,0 +1,108 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* ✅ Added for better text visibility */
+.dashboard-header h2 {
+  color: #111827; /* dark strong */
+  font-weight: 700;
+}
+
+.dashboard-subtitle {
+  color: #374151; /* medium dark */
+  font-weight: 500;
+}
+
+.tabs button {
+  margin-left: 10px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  background-color: #e5e7eb;
+  cursor: pointer;
+}
+
+.tabs .active {
+  background: linear-gradient(90deg, #7c3aed, #9333ea);
+  color: white;
+}
+
+.agent-section textarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 15px;
+  color: #111827; /* ✅ make input text dark */
+}
+
+.agent-section textarea::placeholder {
+  color: #6b7280; /* subtle placeholder */
+}
+
+.agent-section button {
+  background-color: #7c3aed;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.output-section {
+  margin-top: 30px;
+}
+
+.output-card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ✅ Ensure output text is dark */
+.output-card h4 {
+  color: #111827;
+}
+
+.output-card p {
+  color: #374151;
+}
+
+.history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.history-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ✅ Ensure history text is dark */
+.history-card h4 {
+  color: #111827;
+}
+
+.history-card small {
+  color: #6b7280;
+}
+
+.subtitle {
+  color: #374151;        /* darker readable grey */
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 6px;
+}

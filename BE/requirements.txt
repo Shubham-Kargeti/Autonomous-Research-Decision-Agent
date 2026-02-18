@@ -12,3 +12,8 @@ bcrypt==3.2.2
 passlib[bcrypt]==1.7.4
 python-jose==3.5.0
 pydantic[email]==2.12.5
+python-jose[cryptography]==3.5.0
+httpx==0.28.1
+cachetools==7.0.1
+pydantic-settings==2.13.0
+requests==2.32.5

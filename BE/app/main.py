@@ -4,7 +4,6 @@ from contextlib import asynccontextmanager
 from app.api import router
 from app.db.database import engine, Base
 import app.db.models
-from app.auth.routes import router as auth_router
 
 
 @asynccontextmanager
@@ -20,7 +19,7 @@ app = FastAPI(
 )
 
 app.include_router(router)
-app.include_router(auth_router)   
+
 
 app.add_middleware(
     CORSMiddleware,
